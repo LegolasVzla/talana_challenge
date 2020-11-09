@@ -1,4 +1,6 @@
 VENV_NAME?=env
+HOST=127.0.0.1
+DPORT=8001
 
 help:
 	@echo "make execute"
@@ -11,10 +13,25 @@ help:
 execute:
 	python manage.py runserver ${HOST}:${DPORT}
 
+celery:
+	celery worker -A backend -f logs/--loglevel=INFO --autoscale=10,5 --concurrency=8
+
+flower:
+	flower --port=5555
+
 setup:
 	# Install PostgreSQL
 	sudo apt-get update
 	sudo apt install python3-dev postgresql postgresql-contrib python3-psycopg2 libpq-dev -y
+	# Install RabbitMQ
+	echo "deb http://www.rabbitmq.com/debian/ testing main"  | sudo tee  /etc/apt/sources.list.d/rabbitmq.list > /dev/null
+	wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+	sudo apt-key add rabbitmq-signing-key-public.asc
+	sudo apt-get update
+	sudo apt-get install rabbitmq-server -y
+	sudo service rabbitmq-server start
+	sudo rabbitmq-plugins enable rabbitmq_management
+	sudo service rabbitmq-server restart
 	# Generate log folder 
 	mkdir logs
 	# Generate config file for environment variables
@@ -30,7 +47,7 @@ setup:
 
 install:
 	pip install -r requirements.txt
-	sudo apt-get install python3-tk
+	sudo -u postgres psql -c "CREATE DATABASE challenge_db WITH OWNER postgres;"
 	python manage.py makemigrations
 	python manage.py migrate
 	# load default system data

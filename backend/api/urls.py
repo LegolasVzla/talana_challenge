@@ -3,7 +3,6 @@ from django.conf.urls.static import static
 from rest_framework import routers
 from .api import (UserViewSet)
 from django.urls import path
-#from rest_framework_simplejwt import views as jwt_views
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -30,11 +29,9 @@ urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     url(r'^api/user/create_account/', UserViewSet.as_view({'post': 'create_account'}), name='create_account'),
-    url(r'^api/user/verify_account/', UserViewSet.as_view({'post': 'verify_account'}), name='verify_account'),
-    #url(r'^api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    #url(r'^api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^api/user/verify_account/<int:user_id>', UserViewSet.as_view({'post': 'verify_account'}), name='verify_account'),
+    url(r'^api/user/generate_password/(?P<pk>\d+)$', UserViewSet.as_view({'post': 'generate_password'}), name='generate_password'),
+    url(r'^api/user/choose_winner/', UserViewSet.as_view({'get': 'choose_winner'}), name='choose_winner')
 ]
 
 urlpatterns += router.urls
-
-#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

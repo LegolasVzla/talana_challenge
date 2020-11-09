@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     'users',
     'rest_framework',
     'drf_yasg',
-    'djcelery',
-    'send_email'
+    'djcelery'
 ]
 
 MIDDLEWARE = [
@@ -65,7 +64,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -269,11 +268,28 @@ REST_FRAMEWORK = {
 '''
 
 ###################################################################
-##### Simplejwt CONFIG
+##### FRONTEND CONFIG 
 ###################################################################
 
-# Frontend client port
 CORS_ORIGIN_WHITELIST = [
     'http://'+config.get('frontendClient', 'FRONTEND_DOMAIN')+':'+config.get('frontendClient', 'FRONTEND_PORT')
 ]
 
+###################################################################
+##### EMAIL CONFIG 
+###################################################################
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config.get('emailConfig', 'EMAIL_HOST') 
+EMAIL_USE_TLS = config.get('emailConfig', 'EMAIL_USER_TLS')
+EMAIL_PORT = config.get('emailConfig', 'EMAIL_PORT') 
+EMAIL_HOST_USER = config.get('emailConfig', 'EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('emailConfig', 'EMAIL_HOST_PASSWORD')
+
+
+###################################################################
+##### RabbitMQ CONFIG 
+###################################################################
+
+RABBITMQ_USER = config.get('rabbitMQConfig', 'RABBITMQ_USER')
+RABBITMQ_PASS = config.get('rabbitMQConfig', 'RABBITMQ_PASS') 

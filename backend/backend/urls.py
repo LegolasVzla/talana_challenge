@@ -16,10 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
-from send_email.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$', index),
 	path('',include('api.urls'))
 ]
