@@ -34,8 +34,6 @@ setup:
 	sudo service rabbitmq-server restart
 	# Generate log folder 
 	mkdir logs
-	# Generate config file for environment variables
-	touch settings.ini
 	# install pip
 	sudo apt-get install python-pip python-dev build-essential -y
 	sudo pip install --upgrade pip
@@ -46,7 +44,7 @@ setup:
 	virtualenv $(VENV_NAME) --python=python3
 
 install:
-	pip install -r requirements.txt
+	pip install -r ../requirements.txt
 	sudo -u postgres psql -c "CREATE DATABASE challenge_db WITH OWNER postgres;"
 	python manage.py makemigrations
 	python manage.py migrate
